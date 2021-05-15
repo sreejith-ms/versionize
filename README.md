@@ -1,4 +1,4 @@
-# Versionize
+# Versionize monorepo
 
 [![Travis build status](https://travis-ci.org/saintedlama/versionize.svg?branch=master)](https://travis-ci.org/saintedlama/versionize)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/r0rjv30llx7nhxl4?svg=true)](https://ci.appveyor.com/project/saintedlama/versionize)
@@ -20,12 +20,24 @@ _how it works:_
     4. `dotnet pack`
     5. `dotnet nuget push`
 
-`versionize` does the following:
+## Monorepo steps:
+Create a `version.json` file for each projects in solution (similar to [GitVersioning](https://github.com/dotnet/Nerdbank.GitVersioning/blob/master/doc/versionJson.md))
 
-1. bumps the version in your `.csproj` file (based on your commit history)
-2. uses [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog) to update _CHANGELOG.md_
-3. commits `.csproj` file and _CHANGELOG.md_
-4. tags a new release
+Here is a sample `version.json` file
+```
+{
+  "version": "1.0.0",
+  "scopeName": "foolib",
+  "parentScopes": []
+}
+```
+* `version` indicates the current version of the project.
+* `scopeName` is used to indicate the package names in a monorepo
+* The `scopeName` must be used in the commit message, it is the `[optional scope]` in conventional commits specification.
+* Sample commit message: `feat(foolib): add foobar`
+* The versioning of the package is calculated by using the `scopeName`. The `scopeName` also used in tagging and changelog.
+* `parentScopes` is used to indicate a dependency packages. Suppose a project `foo` depends on another project `bar`, then a commit in `bar` should cause a version bump in `foo`. To acheive this the `parentScopes` in `foo` must refer to `bar`. Example: `"parentScopes": ["bar"]`
+* The `version` gets bumped based on your commit history with scope
 
 ## Installation
 
