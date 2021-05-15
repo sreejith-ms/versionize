@@ -17,12 +17,14 @@ namespace Versionize
 
         public string FilePath { get; }
 
-        public void Write(Version version, DateTimeOffset versionTime, IChangelogLinkBuilder linkBuilder, IEnumerable<ConventionalCommit> commits,
+        public void Write(string scopeName, Version version, DateTimeOffset versionTime, IChangelogLinkBuilder linkBuilder, IEnumerable<ConventionalCommit> commits,
             bool includeAllCommitsInChangelog = false)
         {
-            var versionTagLink = string.IsNullOrWhiteSpace(linkBuilder.BuildVersionTagLink(version)) ? version.ToString() : $"[{version}]({linkBuilder.BuildVersionTagLink(version)})";
+            var versionTagLink = string.IsNullOrWhiteSpace(linkBuilder.BuildVersionTagLink(version)) ? 
+                $"{scopeName}/{version}" : 
+                $"[{scopeName}/{version}]({linkBuilder.BuildVersionTagLink(version)})";
 
-            var markdown = $"<a name=\"{version}\"></a>";
+            var markdown = "";//$"<a name=\"{version}\"></a>";
             markdown += "\n";
             markdown += $"## {versionTagLink} ({versionTime.Year}-{versionTime.Month}-{versionTime.Day})";
             markdown += "\n";
